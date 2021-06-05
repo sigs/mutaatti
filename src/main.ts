@@ -22,7 +22,7 @@ const TEST_RUN = !!Deno.env.get("TEST_RUN")
 const infile = "./kotus-sanalista_v1/kotus-sanalista_v1.xml"
 const input = await Deno.readTextFile(infile)
 const xml = parse(input)
-const wordlist:string[] =
+const wordlist: string[] =
   xml?.root?.children?.map((wordxml) => wordxml.children[0].content) || []
 log.debug(`Read ${wordlist.length} words`)
 

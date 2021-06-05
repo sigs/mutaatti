@@ -52,14 +52,51 @@ function lengthen(word: string) {
 }
 
 function alterVoicing(word: string) {
+  // pick random letter to start search from
+  const startIndex = Math.floor(Math.random() * word.length)
+
+  const mutationList = [
+    { letter: "k", target: "g", startIndex, prio: 2 + Math.random() },
+    { letter: "p", target: "b", startIndex, prio: 2 + Math.random() },
+    { letter: "t", target: "d", startIndex, prio: 2 + Math.random() },
+    { letter: "g", target: "k", startIndex, prio: 2 + Math.random() },
+    { letter: "b", target: "p", startIndex, prio: 2 + Math.random() },
+    { letter: "d", target: "t", startIndex, prio: 2 + Math.random() },
+    { letter: "k", target: "g", startIndex: 0, prio: 1 + Math.random() },
+    { letter: "p", target: "b", startIndex: 0, prio: 1 + Math.random() },
+    { letter: "t", target: "d", startIndex: 0, prio: 1 + Math.random() },
+    { letter: "g", target: "k", startIndex: 0, prio: 1 + Math.random() },
+    { letter: "b", target: "p", startIndex: 0, prio: 1 + Math.random() },
+    { letter: "d", target: "t", startIndex: 0, prio: 1 + Math.random() },
+    { letter: "a", target: "ä", startIndex, prio: 0.5 + Math.random() },
+    { letter: "o", target: "ö", startIndex, prio: 0.5 + Math.random() },
+    { letter: "u", target: "y", startIndex, prio: 0.5 + Math.random() },
+    { letter: "ä", target: "a", startIndex, prio: 0.5 + Math.random() },
+    { letter: "ö", target: "o", startIndex, prio: 0.5 + Math.random() },
+    { letter: "y", target: "u", startIndex, prio: 0.5 + Math.random() },
+    { letter: "i", target: "j", startIndex, prio: 0.5 + Math.random() },
+    { letter: "j", target: "i", startIndex, prio: 0.5 + Math.random() },
+  ]
+  mutationList.sort((a, b) => b.prio - a.prio) // descending
+
+  for (const { letter, target, startIndex } of mutationList) {
+    const i = word.indexOf(letter, startIndex)
+    if (i > -1) {
+      if (word[i] == word[i + 1]) {
+        return word.substring(0, i) + target + target + word.substring(i + 2)
+      }
+      return word.substring(0, i) + target + word.substring(i + 1)
+    }
+  }
+
   return word
 }
 
 export function mutate(word: string, options: any = {}) {
   const {
     shortenPr = 0.3,
-    lengthenPr = 0.6,
-    alterVoicingPr = 0.1, // k <-> g, p <-> b, t <-> d
+    lengthenPr = 0.5,
+    alterVoicingPr = 0.2, // k <-> g, p <-> b, t <-> d
   } = options
 
   const r = Math.random()
