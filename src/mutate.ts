@@ -106,3 +106,23 @@ export function mutate(word: string, options: any = {}) {
     ? lengthen(word)
     : alterVoicing(word)
 }
+
+export function mutateText(originalText: string, options: any = {}) {
+  const words = originalText.split(" ")
+  const {
+    frequency = 0.1,
+    mutationCount = Math.ceil(words.length * frequency),
+  } = options
+  const mutations = Array(words.length).fill(0)
+    .map((_, index) => ({ index, prio: Math.random() }))
+    .sort((a, b) => b.prio - a.prio)
+    .slice(0, mutationCount)
+    .map(({ index }) => {
+      const correct = words[index]
+      const corrupt = mutate(correct)
+      words[index] = corrupt
+      return { index, correct, corrupt }
+    })
+  const text = words.join(" ")
+  return { originalText, text, mutations }
+}
